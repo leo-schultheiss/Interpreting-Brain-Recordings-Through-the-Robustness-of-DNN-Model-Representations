@@ -3,8 +3,17 @@ from matplotlib import pyplot as plt
 
 import os
 
+import compare_variance_residual.common_utils.feature_utils
 
-def correlation_stat_analysis(correlation, savefig=False, alternate_title=None):
+
+def correlation_stat_analysis(correlation, savefig=False, alternate_title=None, xlim=None, ylim=None):
+    """
+    This function calculates and prints the mean, std, min, max, median of the correlation values and plots a histogram
+    of the correlation values. The histogram is colored with the inferno colormap.
+    :param correlation: np.array of correlation values
+    :param savefig: bool, whether to save the plot
+    :param alternate_title: str, if not None, the title of the plot
+    """
     # print statistics
     print("number of voxels", len(correlation))
     print("mean", np.mean(correlation))
@@ -32,9 +41,12 @@ def correlation_stat_analysis(correlation, savefig=False, alternate_title=None):
             plt.suptitle(f"{feature} {modality}")
     plt.xlabel("Correlation")
     plt.ylabel("Number of Voxels")
-    left, right = plt.xlim()
-    plt.xlim(-0.27, 0.610)
-    plt.ylim(0, 7300)
+
+    if xlim:
+        plt.xlim(xlim)
+    if ylim:
+        plt.ylim(ylim)
+
     # add mean vertical line
     plt.axvline(x=np.mean(correlation), color='r', linestyle='dashed', linewidth=1)
     if savefig:
@@ -46,16 +58,14 @@ def correlation_stat_analysis(correlation, savefig=False, alternate_title=None):
 
 if __name__ == "__main__":
     language_model = "bert"
-    feature = "joint"  # semantic low-level joint
+    feature = "semantic"  # semantic low-level joint
     modality = "reading"
-    subject = "01"
+    subject = 1
     layer = 9
     low_level_feature = "letters"
 
     # Load the data
-    filename = f"{low_level_feature}.npy" if feature == "low-level" else f"layer_{layer}.npy"
-    joint_path_addition = f"{low_level_feature}" if feature == "joint" else ""
-    path = os.path.join(f"../{language_model}-{feature}-predictions", modality, subject, joint_path_addition, filename)
+    path = compare_variance_residual.common_utils.feature_utils.get_prediction_path(language_model, feature, modality, subject, layer=layer)
     print("loading", path)
     correlation = np.nan_to_num(np.load(path, allow_pickle=True))
     correlation_stat_analysis(correlation)

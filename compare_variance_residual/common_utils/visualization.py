@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 from matplotlib.pyplot import figure, show
 import tables
 
-from robustness_test.common_utils.hdf_utils import map_to_flat
+from compare_variance_residual.common_utils.hdf_utils import map_to_flat
 
 
 def plot_model_comparison(corrs1, corrs2, name1, name2, thresh=0.35):

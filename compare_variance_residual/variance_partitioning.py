@@ -1,7 +1,6 @@
 import os
 
-from build.lib.robustness_test.visualize import joint_correlation
-from robustness_test.common_utils.training_utils import get_prediction_path
+from compare_variance_residual.common_utils.feature_utils import get_prediction_path
 import numpy as np
 
 def ssc(data: np.array):

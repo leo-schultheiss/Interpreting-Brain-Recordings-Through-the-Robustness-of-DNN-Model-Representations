@@ -194,7 +194,7 @@ def load_words_from_file(file):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Extract language model context representations from text')
     parser.add_argument("--input_file", help="file or folder with text based stories to be analyzed by the model",
-                        type=str, default="stimuli/formatted")
+                        type=str, default="../stimuli/formatted")
     parser.add_argument("--model", help="natural language model used for extracting representations from the text",
                         type=str, default="bert-base")
     parser.add_argument("--sequence_length", help="number of consequent words passed to the model as context", type=int,

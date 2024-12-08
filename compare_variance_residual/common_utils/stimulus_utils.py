@@ -1,4 +1,4 @@
-from robustness_test.common_utils.textgrid import TextGrid
+from compare_variance_residual.common_utils.textgrid import TextGrid
 import os
 import numpy as np
 

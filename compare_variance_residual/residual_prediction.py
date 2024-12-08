@@ -6,7 +6,7 @@ import h5py
 from ridge_utils.ridge import bootstrap_ridge
 
 from common_utils.residuals_text_speech import *
-from robustness_test.common_utils.training_utils import load_subject_fmri
+from compare_variance_residual.common_utils.feature_utils import load_subject_fmri
 
 logging.basicConfig(level=logging.DEBUG)
 

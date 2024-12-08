@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt, cm
 
-from robustness_test.common_utils.training_utils import get_prediction_path
+from compare_variance_residual.common_utils.feature_utils import get_prediction_path
 
 
 language_model = "bert"

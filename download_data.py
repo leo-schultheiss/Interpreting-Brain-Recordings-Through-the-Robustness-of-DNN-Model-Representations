@@ -1,14 +1,16 @@
+import logging
 import os
-import requests
-import os
-from tqdm import tqdm
 from urllib.request import urlopen
 
-import logging
+import requests
+from tqdm import tqdm
 
 logger = logging.getLogger(__name__)
 
-def download_file(file_url, download_path="data"):
+DATA_DIR = "data"
+
+
+def download_file(file_url, download_path):
     # extract file name from url
     file_name = os.path.basename(file_url)
 
@@ -30,13 +32,17 @@ def download_file(file_url, download_path="data"):
 
 def is_file_complete(file_path, file_url):
     if os.path.exists(file_path):
-        response = urlopen(file_url)
-        total_size = int(response.info().get('Content-Length').strip())
-        if os.path.getsize(file_path) == total_size:
-            return True
-        else:
-            logger.info(f"{file_path} is corrupted.")
-            return False
+        with urlopen(file_url) as response:
+            try:
+                total_size = int(response.info().get('Content-Length').strip())
+                if os.path.getsize(file_path) == total_size:
+                    return True
+                else:
+                    logger.info(f"{file_path} is corrupted.")
+                    return False
+            except Exception as e:
+                logger.warning(f"unable to get file size for {file_url}: {e}")
+                return True
     else:
         return False
 
@@ -107,8 +113,10 @@ for url in [features_matrix_url, features_trn_new_url, features_val_new_url, art
             articulation_test_url]:
     urls.append(url)
 
-for url in urls:
-    try:
-        download_file(url)
-    except Exception as e:
-        print(f"unable to download file from {url}: {e}")
+if __name__ == "__main__":
+    for url in urls:
+        logger.info(f"Downloading data from {url}")
+        try:
+            download_file(url, DATA_DIR)
+        except Exception as e:
+            logger.error(f"unable to download file from {url}: {e}")
