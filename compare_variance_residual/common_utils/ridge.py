@@ -35,7 +35,7 @@ class TemporalChunkSplitter(BaseCrossValidator):
 
 
 def bootstrap_ridge(stim_train, resp_train, stim_test, resp_test, ct, alphas=np.logspace(-5, 15, 20), nboots=15,
-                    chunklen=40, nchunks=20, single_alpha=True, use_corr=True, n_iter=20, n_targets_batch=None,
+                    chunklen=40, nchunks=20, single_alpha=True, singcutoff=1e-10,use_corr=True, n_iter=20, n_targets_batch=None,
                     n_targets_batch_refit=None, n_alphas_batch=10, logger=ridge_logger, random_state=42):
     """Adapted from https://github.com/csinva/fmri/blob/master/neuro/encoding/ridge.py to use himalaya
     Uses ridge regression with a bootstrapped held-out set to get optimal alpha values for each response.
@@ -74,6 +74,12 @@ def bootstrap_ridge(stim_train, resp_train, stim_test, resp_test, ct, alphas=np.
         product should be about 20 percent of the total length of the training data.
     single_alpha : boolean, default False
         Whether to use a single alpha for all responses. Good for identification/decoding.
+    singcutoff : float, default 1e-10
+        The first step in ridge regression is computing the singular value decomposition (SVD) of the
+        stimulus Rstim. If Rstim is not full rank, some singular values will be approximately equal
+        to zero and the corresponding singular vectors will be noise. These singular values/vectors
+        should be removed both for speed (the fewer multiplications the better!) and accuracy. Any
+        singular values less than singcutoff will be removed.
     use_corr : boolean, default True
         If True, this function will use correlation as its metric of model fit. If False, this function
         will instead use variance explained (R-squared) as its metric of model fit. For ridge regression
