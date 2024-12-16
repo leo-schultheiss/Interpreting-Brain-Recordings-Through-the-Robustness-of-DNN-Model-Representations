@@ -65,6 +65,7 @@ def get_prediction_path(language_model: str | None, feature: str, modality: str,
     :param layer: layer of the model used for prediction
     :return: path to the predictions
     """
+    # todo refactor this mess
     def get_git_root():
         git_repo = git.Repo(".", search_parent_directories=True)
         git_root = git_repo.git.rev_parse("--show-toplevel")
