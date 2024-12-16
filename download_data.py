@@ -105,12 +105,8 @@ features_matrix_url = "https://gin.g-node.org/gallantlab/story_listening/raw/mas
 # contain information on low level features
 features_trn_new_url = "https://gin.g-node.org/denizenslab/narratives_reading_listening_fmri/raw/18fd91d109305acea443610303aa8ac992d926bb/features/features_trn_NEW.hdf"
 features_val_new_url = "https://gin.g-node.org/denizenslab/narratives_reading_listening_fmri/raw/18fd91d109305acea443610303aa8ac992d926bb/features/features_val_NEW.hdf"
-# contain low level features for audio data
-articulation_trn_url = "https://github.com/subbareddy248/speech-llm-brain/raw/refs/heads/main/Low-level-features/articulation_train.npy"
-articulation_test_url = "https://github.com/subbareddy248/speech-llm-brain/raw/refs/heads/main/Low-level-features/articulation_test.npy"
 
-for url in [features_matrix_url, features_trn_new_url, features_val_new_url, articulation_trn_url,
-            articulation_test_url]:
+for url in [features_matrix_url, features_trn_new_url, features_val_new_url]:
     urls.append(url)
 
 if __name__ == "__main__":
