@@ -8,7 +8,9 @@ from scipy.stats import zscore
 from sklearn.kernel_ridge import KernelRidge
 from sklearn.linear_model import Ridge, RidgeCV
 from sklearn.model_selection import KFold
-from common_utils.npp import zscore
+
+from compare_variance_residual.common_utils.feature_utils import load_low_level_textual_features
+from compare_variance_residual.common_utils.npp import zscore
 
 
 def corr(X, Y):
@@ -82,7 +84,7 @@ def kernel_ridge(X, Y, lmbda):
     return np.dot(X.T.dot(inv(X.dot(X.T) + lmbda * np.eye(X.shape[0]))), Y)
 
 
-def kernel_ridge_by_lambda(X, Y, Xval, Yval, lambdas=np.array([0.1, 1, 10, 100, 1000])):
+def error_kernel_ridge_by_lambda(X, Y, Xval, Yval, lambdas=np.array([0.1, 1, 10, 100, 1000])):
     error = np.zeros((lambdas.shape[0], Y.shape[1]))
     for idx, lmbda in enumerate(lambdas):
         weights = kernel_ridge(X, Y, lmbda)
@@ -109,10 +111,10 @@ def kernel_ridge_by_lambda_svd(X, Y, Xval, Yval, lambdas=np.array([0.1, 1, 10, 1
 def cross_val_ridge(train_features, train_data, n_splits=10,
                     lambdas=np.array([10 ** i for i in range(-6, 10)]),
                     method='plain',
-                    do_plot=False):
+                    do_plot=True):
     ridge_1 = dict(plain=ridge_by_lambda,
                    svd=ridge_by_lambda_svd,
-                   kernel_ridge=kernel_ridge_by_lambda,
+                   kernel_ridge=error_kernel_ridge_by_lambda,
                    kernel_ridge_svd=kernel_ridge_by_lambda_svd,
                    ridge_sk=ridge_by_lambda_sk)[method]
     ridge_2 = dict(plain=ridge,
@@ -323,3 +325,12 @@ def residuals_visual(source_train, source_val, target_data, eachfeature):
     final_residuals[eachfeature].append(np.array(all_train))
     final_residuals[eachfeature].append(np.array(all_test))
     return final_residuals
+
+
+if __name__ == "__main__":
+    low_level_feature = 'letters'
+    stimulus_features = np.load('../../bert_downsampled_data.npy',
+                                allow_pickle=True)  # This file contains already downsampled data
+
+    base_features_train, base_features_val = load_low_level_textual_features('../../data')
+    residual_features = residuals_textual(base_features_train, base_features_val, stimulus_features, low_level_feature)
